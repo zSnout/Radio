@@ -7,6 +7,8 @@ The `Radio` class is where all of the magic happens.
 `stream` is the name of the stream to connect to. If it doesn't exist, it is created.
 If provided, `password` is the password of the stream to connect to/create.
 
+Note that `stream`s are unique to your domain. For example, the stream `chat` on `example.com` is not the same as `chat` on `mywebsite.com`. Also note that streams differ for subdomains. Ex: `chat` on `example.com` is not the same as `chat` on `chat.example.com`.
+
 Once the `Radio` object is created, you can start sending and recieving messages.
 
 ## `.connect()`
@@ -28,9 +30,32 @@ Note that `.sendMessage()` can only send text, and anything other that text is c
 ## `.getAllData()`
 The `.getAllData()` method allows you to get all the messages in the stream. It will returns a `Promise` that will:
  - Resolve with an array containing all the messages sent if the request was successful, or
- - Reject with the original data if a JavaScript error occurred.
+ - Reject with the error if a JavaScript error occurred.
 
 ## `.getNewData()`
 The `.getNewData()` method is like the `.getAllData()` method, but it only returns messages that have not been gotten before.
 
 ## `.waitForNew([time])`
+The `.waitForNew()` method checks every `time` milliseconds for new data. Note that values of `time` less than `5000` will be changed to `5000`.
+
+It returns a `Promise` that will:
+ - Resolve with an array containing the new data once new data is successfully found, or
+ - Reject with the error if a JavaScript error occurred.
+
+## `.onNewData(callback [, time])`
+The `.onNewData()` acts like the `.waitForNew()` method, except it calls the function `callback` each time new data is found, instead of once. It is the only method that does not return a promise.
+
+# Examples
+
+## TicTacToe
+Here's a quick example of a practical use for Radio:
+
+```
+var radio = new Radio();
+
+radio.connect().then(function(data) {
+  if (!data) {
+    
+  }
+});
+```
