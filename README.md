@@ -47,15 +47,22 @@ The `.onNewData()` acts like the `.waitForNew()` method, except it calls the fun
 
 # Examples
 
-## TicTacToe
-Here's a quick example of a practical use for Radio:
+## Chat
+Here's a quick example of a practical use for Radio (also with [jQuery](https://jquery.com/)):
 
-```
-var radio = new Radio();
+``` javascript
+var radio = new Radio("chat"); // Start the new Radio
 
-radio.connect().then(function(data) {
-  if (!data) {
-    
-  }
+$("#send").on("click",function() { // When the "send" button is clicked,
+  radio.sendMessage($("#message").val()); // Send a message.
 });
+
+window.setTimeout(function() { // Every 5 seconds,
+  radio.getAllData().then(function(data) { // Get all the data. When it resolves,
+    $("#chat").empty(); // Empty the chat
+    for (var i = 0;i < data.length;i++) { // For each item in the chat,
+      $("#chat").prepend($("<div>").text(data[i])); // Add it the the message list
+    }
+  });
+},5000);
 ```
