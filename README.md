@@ -2,9 +2,15 @@
 
  - [Radio](#radio)
    - [The `Radio` Class](#the-radio-class)
-   - [`.send(message)`](#send-message)
+   - [`.send(message)`](#sendmessage)
+   - [`.getAll()`](#getall)
+   - [`.getNew()`](#getnew)
+   - [`.wait()`](#wait)
  - [Example](#example)
  - [Security](#security)
+   - [Password Encryption](#password-encryption)
+   - [Data Encryption](#data-encryption)
+   - [Get your Data](#get-your-data)
 
 # Radio
 Radio is a JavaScript library that gives you the ability to transfer data between devices in a simple manner.
