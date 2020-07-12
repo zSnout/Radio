@@ -31,6 +31,25 @@ class Radio {
         });
     }
     
+    static exists(stream,password) {
+        return new Promise(function(resolve,reject) {
+            Radio.fetch("https://zsnout.com/radio/exists",{
+                domain: window.location.host,
+                stream: stream,
+                password: password
+            })
+                .then(function(data) {
+                    if (data == "ERROR") {
+                        reject(true);
+                    } else {
+                        resolve(JSON.parse(data));
+                    }
+                },function(data) {
+                    reject(false);
+                });
+        });
+    }
+    
     fetch(url,data) {
         if (!url) {
             return Promise.reject("");
@@ -140,17 +159,15 @@ class Radio {
         
         return new Promise(function(resolve,reject) {
             function wait() {
-                window.setTimeout(function() {
-                    me.getNewData().then(function(data) {
-                        if (data.length >= 1) {
-                            resolve(data);
-                        } else {
-                            return wait();
-                        }
-                    },function(data) {
-                        reject(data);
-                    });
-                },time);
+                me.getNewData().then(function(data) {
+                    if (data.length >= 1) {
+                        resolve(data);
+                    } else {
+                        window.setTimeout(wait,time);
+                    }
+                },function(data) {
+                    reject(data);
+                });
             }
             
             wait();
@@ -169,9 +186,13 @@ class Radio {
         
         function wait() {
             me.waitForNew(time).then(function(data) {
-                func(data);
-                wait();
+                if (data.length != 0) {
+                    func(data);
+                    wait();
+                }
             });
         }
+        
+        wait();
     }
 }
