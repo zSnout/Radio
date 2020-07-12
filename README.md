@@ -1,6 +1,8 @@
 # Table of Contents
 
  - [Radio](#radio)
+   - [The `Radio` Class](#the-radio-class)
+   - [`.send(message)`](#send-message)
  - [Example](#example)
  - [Security](#security)
 
@@ -14,6 +16,7 @@ The `Radio` class is where all of the magic happens. It can take anywhere from o
 
 The first parameter, `stream`, is the name of the stream to connect to. If a stream doesn't exist, it is created.
 Note that `stream`s are unique to your domain. For example, the stream `chat` on `example.com` is not the same as `chat` on `mywebsite.com`. Also note that streams differ for subdomains. Ex: `chat` on `example.com` is not the same as `chat` on `chat.example.com`.
+Also note that `stream`s are stored in lowercase, so `zSnout` "redirects" to `zsnout`.
 
 The second parameter, `password`, is the password of the stream to connect to/create. You can use `""` for no password.
 
@@ -55,9 +58,25 @@ We store the content of Radio in a database containing five columns: `id`, `doma
 Three of these columns are unencrypted: `id`, `domain`, and `stream`. However, the other two are fully encrypted.
 
 ## Password Encryption
-
 We use [PHP](https://php.net/)'s [`password_hash()`](https://www.php.net/manual/en/function.password-hash.php) function with BCrypt to hash your password. Hashing is a one-way algorithm, so there's no way for us to know your password.
 
 ## Data Encryption
-
 We use PHP's [Sodium](https://www.php.net/manual/en/book.sodium.php) extension to encrypt the data of your stream. The data is encrypted with your plain text password as the key, which can't be derived from the other columns in the database. The only way to know your data correctly is to have the right password.
+
+## Get your Data
+If you would like to view the internal data we store, go to
+``` html
+https://zsnout.com/radio/content?host=<domain>&stream=<stream>&password=<password>
+```
+
+It will either print:
+ - `NOEXIST` if the stream does not exist,
+ - `PASSWORD` if the stream exists but you have the wrong password, or
+ - A JSON string containing:
+   - `id`: The ID of the row in the database.
+   - `domain`: The domain of the row.
+   - `stream`: The stream name.
+   - `password`: The stream's password as it's stored in the database.
+   - `data`: An array containing the stream's data as it's stored in the database.
+
+We reccommend that you view the source instead of the output, as the JSON is pretty-printed.
