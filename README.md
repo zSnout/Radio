@@ -1,7 +1,7 @@
 # Radio
 Radio is a JavaScript library that gives you the ability to transfer data between devices in a simple manner.
 
-## The `Radio(stream [, password])` Class
+## The `Radio(stream [, password [, callback [, current]]])` Class
 The `Radio` class is where all of the magic happens.
 
 `stream` is the name of the stream to connect to. If it doesn't exist, it is created.
