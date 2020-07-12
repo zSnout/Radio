@@ -63,7 +63,7 @@ class Radio {
         return Radio.fetch(url,data);
     }
     
-    constructor(stream,password) {
+    constructor(stream,password,callback,current) {
         stream = stream || "";
         password = password || "";
         
@@ -72,49 +72,72 @@ class Radio {
         this.password = password;
         this.gotten = 0;
         
-        this.connect();
-    }
-    
-    connect() {
         var me = this;
         
-        return new Promise(function(resolve,reject) {
-            me.fetch("https://zsnout.com/radio/connect")
-                .then(function(data) {
-                    if (data == "SUCCESS") {
-                        resolve(true);
-                    } else {
-                        resolve(false);
-                    }
-                },function(data) {
-                    reject(data);
+        function connect() {
+            return new Promise(function(resolve,reject) {
+                me.fetch("https://zsnout.com/radio/connect")
+                    .then(function(data) {
+                        if (data == "SUCCESS") {
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    },function(data) {
+                        reject(data);
+                    });
+            });
+        }
+        
+        connect().then(function(data) {
+            if (!data) {
+                console.error("You have unsuccessfully connected to Radio.");
+                return;
+            }
+            console.log("You have successfully connected to Radio.");
+            
+            function event() {
+                me.wait(function(data) {
+                    callback(data);
+                    event();
                 });
+            }
+            
+            if (typeof current == "function" && typeof callback == "function") {
+                me.getAll().then(function(data) {
+                    for (var i = 0;i < data.length;i++) {
+                        current(data[i]);
+                    }
+                    event();
+                });
+            } else if (typeof current == "function") {
+                me.getAll().then(function(data) {
+                    for (var i = 0;i < data.length;i++) {
+                        current(data[i]);
+                    }
+                });
+            } else if (typeof callback == "function") {
+                event();
+            }
+        },function(data) {
+            console.error("You unsuccessfully connected to Radio.");
         });
     }
     
-    sendMessage(message) {
-        var me = this;
-        
-        return new Promise(function(resolve,reject) {
-            me.fetch("https://zsnout.com/radio/send",{message: message})
-                .then(function(data) {
-                    if (data == "SUCCESS") {
-                        resolve(true);
-                    } else {
-                        resolve(false);
-                    }
-                },function(data) {
-                    reject(data);
-                });
-        });
+    send(message) {
+        this.fetch("https://zsnout.com/radio/send",{message: message});
     }
     
-    getAllData() {
+    getAll() {
         var me = this;
         
         return new Promise(function(resolve,reject) {
             me.fetch("https://zsnout.com/radio/data")
                 .then(function(data) {
+                    if (data == "ERROR" || data == "PASSWORD") {
+                        reject(data);
+                    }
+                    
                     data = JSON.parse(data);
                     
                     me.gotten = data.length;
@@ -125,12 +148,16 @@ class Radio {
         });
     }
     
-    getNewData() {
+    getNew() {
         var me = this;
         
         return new Promise(function(resolve,reject) {
             me.fetch("https://zsnout.com/radio/data")
                 .then(function(data) {
+                    if (data == "ERROR" || data == "PASSWORD") {
+                        reject(data);
+                    }
+                    
                     var orig = JSON.parse(data);
                     if (me.gotten == orig.length) {
                         resolve([]);
@@ -147,52 +174,27 @@ class Radio {
         });
     }
     
-    waitForNew(time) {
-        var me = this;
-        
-        time = Number(time) || 5000;
-        if (isNaN(time)) {
-            return Promise.reject("");
-        } else {
-            time = Math.max(time,5000);
+    wait(callback) {
+        if (typeof callback != "function") {
+            throw new TypeError("The parameter `callback` is of the wrong type.");
         }
         
-        return new Promise(function(resolve,reject) {
-            function wait() {
-                me.getNewData().then(function(data) {
-                    if (data.length >= 1) {
-                        resolve(data);
-                    } else {
-                        window.setTimeout(wait,time);
+        var me = this;
+        
+        function waitForNew() {
+            me.getNew().then(function(data) {
+                if (data.length >= 1) {
+                    for (var i = 0;i < data.length;i++) {
+                        callback(data[i]);
                     }
-                },function(data) {
-                    reject(data);
-                });
-            }
-            
-            wait();
-        });
-    }
-    
-    onNewData(func,time) {
-        var me = this;
-        
-        time = Number(time) || 5000;
-        if (isNaN(time)) {
-            return Promise.reject("");
-        } else {
-            time = Math.max(time,5000);
-        }
-        
-        function wait() {
-            me.waitForNew(time).then(function(data) {
-                if (data.length != 0) {
-                    func(data);
-                    wait();
+                } else {
+                    window.setTimeout(waitForNew,5000);
                 }
+            },function(data) {
+                console.error("Radio.wait failed.");
             });
         }
         
-        wait();
+        waitForNew();
     }
 }
