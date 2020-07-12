@@ -1,3 +1,9 @@
+# Table of Contents
+
+ - [Radio](#radio)
+ - [Example](#example)
+ - [Security](#security)
+
 # Radio
 Radio is a JavaScript library that gives you the ability to transfer data between devices in a simple manner.
 
@@ -39,5 +45,14 @@ It returns a `Promise` that will:
  - Resolve with an array containing the new data once new data is successfully found, or
  - Reject with the error if a JavaScript error occurred.
 
-# zSnout Example
-We have created an example of Radio available at [radio.zsnout.com](https://radio.zsnout.com/).
+# Example
+We at zSnout have created an example of Radio publicly available at [radio.zsnout.com](https://radio.zsnout.com/) in the form of a chat website. It is entirely built on Radio.
+
+# Security
+zSnout's Radio team wants you to know that we care about your security, so here's how we keep your data safe and secure.
+
+## The Database
+
+We store the results of radio in a database containing five columns: `id`, `domain`, `stream`, `password`, and `data`. Three of these are unencrypted: `id`, `domain`, and `stream`.
+
+However, we use PHP's [`password_hash()`](https://www.php.net/manual/en/function.password-hash.php) function to hash your password, and SODIUM to encrypt the data of the stream. The data is encrypted with your plain text password as the key, which can't be derived from the other columns. The only way to know your data is to have the right password.
