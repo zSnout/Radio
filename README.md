@@ -45,24 +45,5 @@ It returns a `Promise` that will:
 ## `.onNewData(callback [, time])`
 The `.onNewData()` acts like the `.waitForNew()` method, except it calls the function `callback` each time new data is found, instead of once. It is the only method that does not return a promise.
 
-# Examples
-
-## Chat
-Here's a quick example of a practical use for Radio (also with [jQuery](https://jquery.com/)):
-
-``` javascript
-var radio = new Radio("chat"); // Start the new Radio
-
-$("#send").on("click",function() { // When the "send" button is clicked,
-  radio.sendMessage($("#message").val()); // Send a message.
-});
-
-window.setTimeout(function() { // Every 5 seconds,
-  radio.getAllData().then(function(data) { // Get all the data. When it resolves,
-    $("#chat").empty(); // Empty the chat
-    for (var i = 0;i < data.length;i++) { // For each item in the chat,
-      $("#chat").prepend($("<div>").text(data[i])); // Add it the the message list
-    }
-  });
-},5000);
-```
+# zSnout Example
+We have created an example of Radio available at [radio.zsnout.com](https://radio.zsnout.com/).
