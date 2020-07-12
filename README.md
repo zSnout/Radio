@@ -51,8 +51,13 @@ We at zSnout have created an example of Radio publicly available at [radio.zsnou
 # Security
 zSnout's Radio team wants you to know that we care about your security, so here's how we keep your data safe and secure.
 
-## The Database
+We store the content of Radio in a database containing five columns: `id`, `domain`, `stream`, `password`, and `data`.
+Three of these columns are unencrypted: `id`, `domain`, and `stream`. However, the other two are fully encrypted.
 
-We store the results of radio in a database containing five columns: `id`, `domain`, `stream`, `password`, and `data`. Three of these are unencrypted: `id`, `domain`, and `stream`.
+## Password Encryption
 
-However, we use PHP's [`password_hash()`](https://www.php.net/manual/en/function.password-hash.php) function to hash your password, and SODIUM to encrypt the data of the stream. The data is encrypted with your plain text password as the key, which can't be derived from the other columns. The only way to know your data is to have the right password.
+We use [PHP](https://php.net/)'s [`password_hash()`](https://www.php.net/manual/en/function.password-hash.php) function with BCrypt to hash your password. Hashing is a one-way algorithm, so there's no way for us to know your password.
+
+## Data Encryption
+
+We use PHP's [Sodium](https://www.php.net/manual/en/book.sodium.php) extension to encrypt the data of your stream. The data is encrypted with your plain text password as the key, which can't be derived from the other columns in the database. The only way to know your data correctly is to have the right password.
