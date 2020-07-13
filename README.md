@@ -2,6 +2,7 @@
 
  - [Setting Up](#setting-up)
    - [zSnout Hosting](#zsnout-hosting)
+   - [Personal Hosting](#personal-hosting)
  - [The `Radio` Class](#the-radio-class)
    - [`.send(message)`](#sendmessage)
    - [`.getAll()`](#getall)
@@ -25,6 +26,19 @@ To use zSnout hosting, all you need to do is include the `main.js` file into you
 
 ## Personal Hosting
 If you are a large business, you may want to host your own copy of Radio. Here's how.
+
+ 1. Download a copy of the [`assets`](/assets/) folder. You can rename it if you want.
+ 2. Make sure that your server has PHP and MySQL, and has the PHP [Sodium](https://www.php.net/manual/en/book.sodium.php) extension enabled.
+   - If your server is missing any of the above, just use zSnout Hosting.
+ 3. In the [`main.php`](/assets/main.php) file on line 3, change the `$database` variable to the MySQL database you're using for Radio.
+ 4. Run the following command on your MySQL server in the database stored in `$database`.
+ ``` mysql
+ CREATE TABLE `u193493540_chats`.`radio` ( `id` INT NOT NULL AUTO_INCREMENT , `domain` TEXT NOT NULL DEFAULT '' , `stream` TEXT NOT NULL DEFAULT '' , `password` TEXT NOT NULL DEFAULT '' , `data` TEXT NOT NULL DEFAULT '[]' , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+ ```
+ 5. In the [`main.php`](/assets/main.php) file on line 4, change the `$MAIN` variable to the superglobal you're retrieving from. zSnout uses GET requests, so we use `$_GET`. However, if you prefer POST requests, use `$_POST`, or any other superglobal like them.
+ 6. In the [`main.js`](/assets/main.js) file on line 3, change the `return` value to the number of seconds before `.wait()` refreshes. Lower values will mean that you'll get a response sooner, but too low might overload your server.
+ 7. In the [`main.js`](/assets/main.js) file on line 7, change the `return` value to the path to the PHP and JavaScript files.
+ 8. Make sure to load `main.js` from your location, not ours.
 
 # The `Radio` Class
 The `Radio` class is where all of the magic happens. It can take anywhere from one to four parameters.
@@ -94,4 +108,4 @@ It will either print:
    - `password`: The stream's password as it's stored in the database.
    - `data`: An array containing the stream's data as it's stored in the database.
 
-We reccommend that you view the source instead of the output, as the JSON is pretty-printed.
+We recommend that you view the source instead of the output, as the JSON is pretty-printed.
