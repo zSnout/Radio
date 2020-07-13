@@ -1,7 +1,6 @@
 <?php
     header("Access-Control-Allow-Origin: *");
     $database = $database;
-    
     $MAIN = $_GET;
     
     function encrypt($text,$key) {
