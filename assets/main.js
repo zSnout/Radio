@@ -1,4 +1,12 @@
 class Radio {
+    static get time() {
+        return 5;
+    }
+    
+    static get path() {
+        return "https://zsnout.com/radio/";
+    }
+    
     static queryData(data) {
         var keys = Object.keys(data);
         var all = [];
@@ -33,7 +41,7 @@ class Radio {
     
     static exists(stream,password) {
         return new Promise(function(resolve,reject) {
-            Radio.fetch("https://zsnout.com/radio/exists",{
+            Radio.fetch(Radio.path + "exists",{
                 domain: window.location.host,
                 stream: stream,
                 password: password
@@ -93,7 +101,7 @@ class Radio {
         
         function connect() {
             return new Promise(function(resolve,reject) {
-                me.fetch("https://zsnout.com/radio/connect")
+                me.fetch(Radio.path + "connect")
                     .then(function(data) {
                         if (data == "SUCCESS") {
                             resolve(true);
@@ -142,14 +150,14 @@ class Radio {
     }
     
     send(message) {
-        this.fetch("https://zsnout.com/radio/send",{message: message});
+        this.fetch(Radio.path + "send",{message: message});
     }
     
     getAll() {
         var me = this;
         
         return new Promise(function(resolve,reject) {
-            me.fetch("https://zsnout.com/radio/data")
+            me.fetch(Radio.path + "data")
                 .then(function(data) {
                     if (data == "ERROR" || data == "PASSWORD") {
                         reject(data);
@@ -169,7 +177,7 @@ class Radio {
         var me = this;
         
         return new Promise(function(resolve,reject) {
-            me.fetch("https://zsnout.com/radio/data")
+            me.fetch(Radio.path + "data")
                 .then(function(data) {
                     if (data == "ERROR" || data == "PASSWORD") {
                         reject(data);
@@ -205,7 +213,7 @@ class Radio {
                         callback(data[i]);
                     }
                 } else {
-                    window.setTimeout(waitForNew,5000);
+                    window.setTimeout(waitForNew,Radio.time * 1000);
                 }
             },function(data) {
                 console.error("Radio.wait failed.");
