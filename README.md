@@ -1,7 +1,8 @@
 # Table of Contents
 
- - [Radio](#radio)
-   - [The `Radio` Class](#the-radio-class)
+ - [Setting Up](#setting-up)
+   - [zSnout Hosting](#zsnout-hosting)
+ - [The `Radio` Class](#the-radio-class)
    - [`.send(message)`](#sendmessage)
    - [`.getAll()`](#getall)
    - [`.getNew()`](#getnew)
@@ -12,13 +13,24 @@
    - [Data Encryption](#data-encryption)
    - [Get your Data](#get-your-data)
 
-# Radio
-Radio is a JavaScript library that gives you the ability to transfer data between devices in a simple manner.
+# Setting Up
 
-## The `Radio` Class
+To set up Radio, you can either use zSnout's `main.js` file, put the `main.js` file in your website's directory, or host Radio yourself.
+
+## zSnout Hosting
+To use zSnout hosting, you need to include the `main.js` file from zSnout into your webpage.
+``` html
+<script src="https://zsnout.com/radio/main.js"></script>
+```
+
+## Using a Copy
+You can also download the [`main.js`](/assets/main.js) file from GitHub and use that file.
+
+## Personal Hosting
+If you are a large business, you may want to host your own copy of Radio.
+
+# The `Radio` Class
 The `Radio` class is where all of the magic happens. It can take anywhere from one to four parameters.
-
-### Parameters
 
 The first parameter, `stream`, is the name of the stream to connect to. If a stream doesn't exist, it is created.
 Note that `stream`s are unique to your domain. For example, the stream `chat` on `example.com` is not the same as `chat` on `mywebsite.com`. Also note that streams differ for subdomains. Ex: `chat` on `example.com` is not the same as `chat` on `chat.example.com`.
