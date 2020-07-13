@@ -15,19 +15,16 @@
 
 # Setting Up
 
-To set up Radio, you can either use zSnout's `main.js` file, put the `main.js` file in your website's directory, or host Radio yourself.
+To set up Radio, you can either use zSnout Hosting or host Radio yourself.
 
 ## zSnout Hosting
-To use zSnout hosting, you need to include the `main.js` file from zSnout into your webpage.
+To use zSnout hosting, all you need to do is include the `main.js` file into your webpage.
 ``` html
 <script src="https://zsnout.com/radio/main.js"></script>
 ```
 
-## Using a Copy
-You can also download the [`main.js`](/assets/main.js) file from GitHub and use that file.
-
 ## Personal Hosting
-If you are a large business, you may want to host your own copy of Radio.
+If you are a large business, you may want to host your own copy of Radio. Here's how.
 
 # The `Radio` Class
 The `Radio` class is where all of the magic happens. It can take anywhere from one to four parameters.
