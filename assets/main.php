@@ -1,6 +1,6 @@
 <?php
     header("Access-Control-Allow-Origin: *");
-    $database = $database;
+    $database = $database; // change this to a MySQL database where the streams are stored.
     $MAIN = $_GET;
     
     function encrypt($text,$key) {
